@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String baseUrl = "https://ncu.one/";
     private static final String callback = "ncunos://ncu.one/";
     private ClipboardManager clipboard;
+    private boolean needResult = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +36,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView webView, String url) {
                 if (url.startsWith(callback)) {
-                    String shortUrl = Uri.parse(url).getQueryParameter("short_url");
                     Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_SEND);
-                    intent.putExtra(Intent.EXTRA_TEXT, shortUrl);
-                    intent.setType("text/plain");
-                    startActivity(Intent.createChooser(intent, getString(R.string.share)));
+                    String shortUrl = Uri.parse(url).getQueryParameter("short_url");
+                    if (needResult) {
+                        intent.putExtra("short_url", shortUrl);
+                        setResult(1, intent);
+                        finish();
+                    } else {
+                        intent.setAction(Intent.ACTION_SEND);
+                        intent.putExtra(Intent.EXTRA_TEXT, shortUrl);
+                        intent.setType("text/plain");
+                        startActivity(Intent.createChooser(intent, getString(R.string.share)));
+                    }
                 } else {
                     webView.loadUrl(url);
                 }
@@ -49,16 +56,26 @@ public class MainActivity extends AppCompatActivity {
         });
 
         String longUrl = "";
-        Uri uri = getIntent().getData();
-        if (uri != null)
-            longUrl = uri.getQueryParameter("url");
+        Intent intent = getIntent();
+        if (intent.getAction().equals(Intent.ACTION_VIEW)) {
+            Uri uri = intent.getData();
+            if (uri != null)
+                longUrl = uri.getQueryParameter("url");
+        } else {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                longUrl = bundle.getString("url", "");
+                needResult = true;
+            }
+        }
         if (longUrl.isEmpty()) {
+            needResult = false;
             clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
             ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
             longUrl = item.getText().toString();
         }
         if (longUrl.isEmpty()) {
-            uri = clipboard.getPrimaryClip().getItemAt(0).getUri();
+            Uri uri = clipboard.getPrimaryClip().getItemAt(0).getUri();
             if (uri != null)
                 longUrl = uri.toString();
         }
