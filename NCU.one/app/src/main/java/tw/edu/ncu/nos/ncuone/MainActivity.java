@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         if (longUrl.isEmpty()) {
             clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
             ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
-            longUrl = (String) item.getText();
+            longUrl = item.getText().toString();
         }
         if (longUrl.isEmpty()) {
             uri = clipboard.getPrimaryClip().getItemAt(0).getUri();
