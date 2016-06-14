@@ -6,7 +6,7 @@ Android App for [NCU.one](https://ncu.one).
 
 ## Web
 
-    <a href="ncunos://ncu.one?url=https%3A%2F%2Fgithub.com%2Fc910335%2FNCU.one-Android-App">Shorten https://github.com/c910335/NCU.one-Android-App</a>
+    <a href="https://ncu.one?url=https%3A%2F%2Fgithub.com%2Fc910335%2FNCU.one-Android-App">Shorten https://github.com/c910335/NCU.one-Android-App</a>
 
 ## Android
 

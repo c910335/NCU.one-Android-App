@@ -17,7 +17,9 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-                <data android:scheme="ncunos"
+                <data android:scheme="https"
+                    android:host="ncu.one" />
+                <data android:scheme="http"
                     android:host="ncu.one" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
